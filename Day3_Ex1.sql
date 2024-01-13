@@ -1,3 +1,89 @@
+--Bài tập 1
 SELECT NAME 
 FROM CITY 
 WHERE COUNTRYCODE='USA' AND POPULATION >120000
+  
+--Bài tập 2 
+SELECT *
+FROM CITY
+WHERE COUNTRYCODE='JPN'
+
+--Bài tập 3
+SELECT CITY, STATE
+FROM STATION 
+
+--Bài tập 4
+SELECT CITY
+FROM STATION
+WHERE   CITY LIKE 'A%'
+        OR CITY LIKE 'E%'
+        OR CITY LIKE 'I%'
+        OR CITY LIKE 'O%'
+        OR CITY LIKE 'U%'
+
+--Bài tập 5
+SELECT DISTINCT CITY
+FROM STATION
+WHERE   CITY LIKE '%a'
+        OR CITY LIKE '%e'
+        OR CITY LIKE '%i'
+        OR CITY LIKE '%o'
+        OR CITY LIKE '%u'
+
+--Bài tập 6
+SELECT DISTINCT CITY
+FROM STATION
+WHERE NOT (CITY LIKE 'A%'
+        OR CITY LIKE 'E%'
+        OR CITY LIKE 'I%'
+        OR CITY LIKE 'O%'
+        OR CITY LIKE 'U%')
+
+--Bài tập 7
+SELECT NAME 
+FROM EMPLOYEE
+ORDER BY NAME 
+
+--Bài tập 8
+SELECT NAME
+FROM EMPLOYEE
+WHERE SALARY >2000 AND MONTHS <10
+ORDER BY EMPLOYEE_ID ASC
+
+--Bài tập 9
+SELECT PRODUCT_ID 
+FROM PRODUCTS
+WHERE LOW_FATS='Y' AND RECYCLABLE='Y'
+ORDER BY PRODUCT_ID ASC
+
+--Bài tập 10
+SELECT NAME
+FROM CUSTOMER
+WHERE ID NOT IN (
+    SELECT ID
+    FROM CUSTOMER
+    WHERE REFEREE_ID = 2) 
+
+--Bài tập 11
+SELECT W.name, W.population, W.area  
+FROM WORLD W
+WHERE W.area >= 3000000 OR W.population >= 25000000
+
+--Bài tập 12
+SELECT DISTINCT AUTHOR_ID AS ID
+FROM VIEWS
+WHERE AUTHOR_ID = VIEWER_ID
+ORDER BY AUTHOR_ID ASC
+
+--Bài tập 13
+SELECT PART, ASSEMBLY_STEP FROM parts_assembly
+WHERE FINISH_DATE IS NULL
+
+--Bài tập 14
+select * from lyft_drivers
+where yearly_salary <=30000 or yearly_salary >=70000
+
+--Bài tập 15
+select advertising_channel
+from uber_advertising
+where money_spent > 100000 and year=2019
