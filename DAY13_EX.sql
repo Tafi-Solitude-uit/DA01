@@ -9,7 +9,24 @@ FROM duplicate_job
 WHERE duplicate_job_count>1
 
 --Bài tập 2
-
+WITH prod_spend AS (
+  (SELECT category,	product, SUM(spend) AS total_spend
+  FROM product_spend
+  WHERE EXTRACT(year FROM transaction_date) = '2022' AND category = 'electronics'
+  GROUP BY category, product
+  ORDER BY total_spend DESC
+  limit 2)
+  UNION
+  (SELECT category,	product, SUM(spend) AS total_spend
+  FROM product_spend
+  WHERE EXTRACT(year FROM transaction_date) = '2022' AND category = 'appliance'
+  GROUP BY category, product
+  ORDER BY total_spend DESC
+  limit 2)
+)
+SELECT category, product, total_spend
+FROM prod_spend
+ORDER BY category, total_spend DESC
 
 --Bài tập 3
 
