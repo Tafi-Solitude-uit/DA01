@@ -72,19 +72,65 @@ from Transactions
 group by month, country
 
 --Bài tập 7
-
+SELECT product_id, year AS first_year, quantity, price
+FROM Sales
+WHERE (product_id, year) in (
+    SELECT product_id, MIN(year) 
+    FROM Sales
+    GROUP BY product_id
+)
 
 --Bài tập 8
-
+select customer_id
+from customer as a
+group by customer_id
+having count(distinct a.product_key) = (
+    select count(b.product_key)
+    from product as b
+)
 
 --Bài tập 9
-
+select a.employee_id
+from Employees as a
+where a.salary < 30000 and a.manager_id is not null and a.manager_id NOT IN (
+    select b.employee_id
+    from Employees as b
+)
+order by a.employee_id
 
 --Bài tập 10
-
+With duplicate_job AS (
+  SELECT company_id, title, description,
+  count(*) AS duplicate_job_count
+  FROM job_listings
+  GROUP BY company_id, title, description)
+SELECT COUNT(*)
+FROM duplicate_job
+WHERE duplicate_job_count > 1
 
 --Bài tập 11
-
+(select u.name as results
+from Movierating as MR
+join users as u on MR.user_id = u.user_id
+group by MR.user_id
+order by count(movie_id) desc, u.name asc
+limit 1)
+union all
+(select m.title as results
+from Movierating as MR
+join movies as m on  MR.movie_id = m.movie_id  
+where extract(month from created_at) = '2' and extract(year from created_at) = '2020'
+group by MR.movie_id
+order by avg(rating) desc, m.title asc
+limit 1)
 
 --Bài tập 12
-
+select id, count(id) as num
+from (SELECT requester_id id
+FROM requestaccepted
+UNION ALL
+SELECT accepter_id id
+FROM requestaccepted) as a
+group by id
+order by num desc
+limit 1
