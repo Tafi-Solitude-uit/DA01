@@ -37,8 +37,16 @@ ORDER BY transaction_date ASC
 --Bài tập 5
 WITH CTEs_record AS (SELECT user_id, tweet_date, tweet_count,
   lag(tweet_count) OVER(PARTITION BY user_id) as col1, 
-  lag(tweet_count,2) OVER(PARTITION BY user_id) as col2
-FROM tweets)
+  lag(tweet_count,2) OVER(PARTITION BY user_id) as col2,
+  RANK() OVER(PARTITION BY user_id ORDER BY tweet_date) as rank_date
+  FROM tweets)
+SELECT user_id, tweet_date, 
+  round((CASE
+    WHEN rank_date = 1 then tweet_count*1.0
+    WHEN rank_date = 2 then (tweet_count+col1)/2.0
+    ELSE (tweet_count+col1+col2)/3.0 
+  end),2) as rolling_avg_3d
+FROM CTEs_record
 
 
 --Bài tập 6
