@@ -53,8 +53,26 @@ SELECT COUNT(merchant_id) AS payment_count
 FROM payments 
 WHERE minute_difference <= 10
 
---Bài tập 7
-
+--Bài tập 7 (giống câu 2 DAY13)
+WITH prod_spend AS (
+  SELECT category, product, sum(spend) AS total_spend,
+  row_number() OVER(PARTITION BY category ORDER BY sum(spend) DESC) as rank
+  from product_spend
+  WHERE EXTRACT(year from transaction_date) = '2022' 
+  GROUP BY category, product)
+SELECT category, product, total_spend
+from prod_spend
+WHERE rank <= 2
 
 --Bài tập 8
-
+WITH CTEs_top5_artists AS (
+  SELECT artist_name, count(g.song_id) as song_count, 
+  dense_rank() OVER(ORDER BY count(g.song_id) DESC) as artist_rank
+  FROM artists as a
+  join songs as s on s.artist_id = a.artist_id
+  join global_song_rank as g on g.song_id = s.song_id
+  WHERE rank <= 10
+  GROUP BY artist_name)
+SELECT artist_name, artist_rank
+FROM CTEs_top5_artists
+WHERE artist_rank <= 5
