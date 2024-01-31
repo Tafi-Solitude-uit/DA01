@@ -33,10 +33,6 @@ ALTER COLUMN orderdate TYPE timestamp with time zone
 USING orderdate::timestamp with time zone;
 
 alter table sales_dataset_rfm_prj
-ALTER COLUMN status TYPE varchar(12)
-USING status::varchar(12);
-
-alter table sales_dataset_rfm_prj
 ALTER COLUMN productline TYPE varchar(30)
 USING productline::varchar(30);
 
