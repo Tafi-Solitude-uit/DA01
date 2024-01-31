@@ -95,5 +95,36 @@ WHERE
 
 ----Cau 3
 ALTER TABLE sales_dataset_rfm_prj
-ADD COLUMN CONTACTLASTNAME VARCHAR(255),
-ADD COLUMN CONTACTFIRSTNAME VARCHAR(255);
+ADD COLUMN CONTACTLASTNAME VARCHAR(20),
+ADD COLUMN CONTACTFIRSTNAME VARCHAR(20);
+
+update sales_dataset_rfm_prj
+set CONTACTLASTNAME = (
+	upper(substring(left(contactfullname, POSITION('-' IN contactfullname)-1) from 1 for 1)) ||
+	
+	substring(left(contactfullname, POSITION('-' IN contactfullname)-1) from 2)
+)
+
+update sales_dataset_rfm_prj
+set CONTACTFIRSTNAME = (
+	upper(substring(right(contactfullname,
+	length(contactfullname)-length(left(contactfullname, POSITION('-' IN contactfullname))))
+	from 1 for 1)) ||
+	
+	substring(right(contactfullname,
+	length(contactfullname)-length(left(contactfullname, POSITION('-' IN contactfullname)))) from 2)
+)
+
+----Cau 4
+ALTER TABLE sales_dataset_rfm_prj
+ADD COLUMN QTR_ID INT,
+ADD COLUMN MONTH_ID INT,
+ADD COLUMN YEAR_ID INT;
+
+UPDATE sales_dataset_rfm_prj
+SET
+    QTR_ID = EXTRACT(QUARTER FROM ORDERDATE),
+    MONTH_ID = EXTRACT(MONTH FROM ORDERDATE),
+    YEAR_ID = EXTRACT(YEAR FROM ORDERDATE);
+
+----Cau 5
