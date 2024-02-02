@@ -84,3 +84,16 @@ youngest:1047
 oldest:1032
 --> độ tuổi trẻ nhất của các khách hàng là 12, với tổng số lượng là 1047; đối tượng lớn tuổi nhất của khách hàng là 70, với tổng số lượng là 1032
 
+----Câu 5
+SELECT
+  created_at,
+  B.category as product_categories,
+  sum(SUM(sale_price) - SUM(cost)) OVER(PARTITION BY created_at, B.category ORDER BY created_at) AS revenue
+FROM
+  bigquery-public-data.thelook_ecommerce.order_items AS A
+JOIN
+  bigquery-public-data.thelook_ecommerce.products AS B ON A.product_id = B.id
+WHERE
+  DATE(created_at) BETWEEN DATE_SUB('2022-04-15', INTERVAL 3 MONTH) AND '2022-04-15'
+GROUP BY
+  created_at, B.category
