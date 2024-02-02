@@ -83,6 +83,24 @@ select
 youngest:1047
 oldest:1032
 --> độ tuổi trẻ nhất của các khách hàng là 12, với tổng số lượng là 1047; đối tượng lớn tuổi nhất của khách hàng là 70, với tổng số lượng là 1032
+----Câu 4
+select *
+from (
+SELECT
+  FORMAT_DATE('%Y-%m', DATE(created_at)) AS month_year,
+  A.product_id,
+  B.name,
+  SUM(sale_price) AS sales,
+  SUM(cost) AS total_cost,
+  SUM(sale_price) - SUM(cost) AS profit,
+  DENSE_RANK() OVER (PARTITION BY FORMAT_DATE('%Y-%m', DATE(created_at)) ORDER BY FORMAT_DATE('%Y-%m', DATE(created_at)) ASC,
+  SUM(sale_price) - SUM(cost) DESC) AS rank_per_month
+FROM
+  bigquery-public-data.thelook_ecommerce.order_items AS A
+JOIN
+  bigquery-public-data.thelook_ecommerce.products AS B ON A.product_id = B.id
+group by  created_at, A.product_id, B.name) as K
+where rank_per_month<=5
 
 ----Câu 5
 SELECT
